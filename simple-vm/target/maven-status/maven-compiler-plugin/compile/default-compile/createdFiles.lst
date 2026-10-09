@@ -1,0 +1,10 @@
+com/mycompany/simple/vm/VirtualMachine.class
+com/mycompany/simple/vm/Instruction.class
+com/mycompany/simple/vm/Memory.class
+com/mycompany/simple/vm/devices/KeyboardController.class
+com/mycompany/simple/vm/CPU$1.class
+com/mycompany/simple/vm/VMTestSuiteRunner.class
+com/mycompany/simple/vm/devices/PrinterController.class
+com/mycompany/simple/vm/devices/DiskController.class
+com/mycompany/simple/vm/CPU.class
+com/mycompany/simple/vm/devices/DeviceController.class

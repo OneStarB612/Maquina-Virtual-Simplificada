@@ -1,0 +1,9 @@
+/home/steven/NetBeansProjects/simple-vm/src/main/java/com/mycompany/simple/vm/CPU.java
+/home/steven/NetBeansProjects/simple-vm/src/main/java/com/mycompany/simple/vm/Instruction.java
+/home/steven/NetBeansProjects/simple-vm/src/main/java/com/mycompany/simple/vm/Memory.java
+/home/steven/NetBeansProjects/simple-vm/src/main/java/com/mycompany/simple/vm/VMTestSuiteRunner.java
+/home/steven/NetBeansProjects/simple-vm/src/main/java/com/mycompany/simple/vm/VirtualMachine.java
+/home/steven/NetBeansProjects/simple-vm/src/main/java/com/mycompany/simple/vm/devices/DeviceController.java
+/home/steven/NetBeansProjects/simple-vm/src/main/java/com/mycompany/simple/vm/devices/DiskController.java
+/home/steven/NetBeansProjects/simple-vm/src/main/java/com/mycompany/simple/vm/devices/KeyboardController.java
+/home/steven/NetBeansProjects/simple-vm/src/main/java/com/mycompany/simple/vm/devices/PrinterController.java
