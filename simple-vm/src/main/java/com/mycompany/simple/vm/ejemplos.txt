@@ -1,0 +1,19 @@
+; sumar dos números ingresados por teclado
+INPUT
+STORE 20
+INPUT
+ADD 20
+OUTPUT
+HALT
+
+; sumar dos números desde memoria
+
+
+LOAD numero1
+ADD numero2
+OUTPUT
+HALT
+
+numero1: DATA 5
+numero2: DATA 7
+

@@ -1,5 +1,7 @@
 package com.mycompany.simple.vm;
 
+import com.mycompany.simple.vm.model.ProgramImage;
+import com.mycompany.simple.vm.service.ProgramAssembler;
 import com.mycompany.simple.vm.devices.DiskController;
 import com.mycompany.simple.vm.devices.KeyboardController;
 import com.mycompany.simple.vm.devices.PrinterController;
@@ -142,132 +144,45 @@ public class VirtualMachine {
     /**
      * Analiza primero el programa en memoria temporal.
      * La memoria actual solo se reemplaza si el análisis termina bien.
-     */
+     */ 
     public void loadProgram(String source) {
         try {
-            int[] image = assemble(source);
-
+            ProgramImage program = new ProgramAssembler().assemble(source);
+            int[] image = program.getMemoryImage();
+            
             reset();
-
-            for (int address = 0; address < image.length; address++) {
+            
+            int usedMemory = program.getInstructionCount() + program.getDataCount();
+            
+            for (int address = 0; address < usedMemory; address++) {
                 memory.write(address, image[address]);
             }
-
+            
             state = VMEvent.State.READY;
-
+            
             publish(
                     VMEvent.Type.PROGRAM_LOADED,
                     "Programa cargado. Instrucciones: "
-                            + image.length,
+                    + program.getInstructionCount()
+                    + ", datos: "
+                    + program.getDataCount(),
                     null
             );
-
         } catch (RuntimeException ex) {
             lastError = ex;
             state = VMEvent.State.ERROR;
-
+            
             publish(
                     VMEvent.Type.ERROR,
                     "No se pudo cargar el programa: "
-                            + ex.getMessage(),
+                    + ex.getMessage(),
                     ex
             );
-
             throw ex;
         }
     }
 
-    private int[] assemble(String source) {
-        if (source == null || source.trim().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "El programa está vacío.");
-        }
 
-        String[] lines = source.split("\\R", -1);
-        int[] image = new int[Memory.SIZE];
-        int address = 0;
-
-        for (int i = 0; i < lines.length; i++) {
-            String line = lines[i].trim();
-            int lineNumber = i + 1;
-
-            if (line.isEmpty()
-                    || line.startsWith("/")
-                    || line.startsWith("#")
-                    || line.startsWith(";")) {
-                continue;
-            }
-
-            if (line.contains(":")) {
-                line = line.substring(
-                        line.indexOf(':') + 1).trim();
-            }
-
-            if (line.isEmpty()) {
-                continue;
-            }
-
-            String[] parts = line.split("\\s+");
-            String mnemonic = parts[0].toUpperCase(Locale.ROOT);
-
-            try {
-                Instruction instruction =
-                        Instruction.fromMnemonic(mnemonic);
-
-                boolean requiresOperand =
-                        instruction.requiresOperand();
-
-                if (requiresOperand && parts.length != 2) {
-                    throw new IllegalArgumentException(
-                            "La instrucción requiere exactamente "
-                            + "un operando.");
-                }
-
-                if (!requiresOperand && parts.length != 1) {
-                    throw new IllegalArgumentException(
-                            "La instrucción no acepta operandos.");
-                }
-
-                int operand = 0;
-
-                if (requiresOperand) {
-                    operand = Integer.parseInt(parts[1]);
-
-                    if (operand < 0 || operand >= Memory.SIZE) {
-                        throw new IllegalArgumentException(
-                                "Operando fuera de rango: " + operand);
-                    }
-                }
-
-                if (address >= Memory.SIZE) {
-                    throw new IllegalArgumentException(
-                            "El programa supera la capacidad de memoria.");
-                }
-
-                image[address] =
-                        Instruction.encode(instruction, operand);
-
-                address++;
-
-            } catch (RuntimeException ex) {
-                throw new IllegalArgumentException(
-                        "Línea " + lineNumber + ": "
-                                + ex.getMessage(),
-                        ex
-                );
-            }
-        }
-
-        if (address == 0) {
-            throw new IllegalArgumentException(
-                    "No se encontraron instrucciones.");
-        }
-
-        int[] program = new int[address];
-        System.arraycopy(image, 0, program, 0, address);
-
-        return program;
-    }
 
     /**
      * Ejecuta una sola instrucción y notifica el nuevo estado.

@@ -123,16 +123,27 @@ public class VMService implements AutoCloseable {
 }
 
     /**
-     * Envía un valor a INPUT.
-     * Si la VM estaba esperando, reanuda la ejecución.
-     */
-    public void submitInput(int value) {
-    vm.submitInput(value);
+ * Envía el dato a INPUT y ejecuta únicamente esa instrucción.
+ */
+public void submitInput(int value) {
+    synchronized (this) {
+        ensureOpen();
 
-    if (vm.getState() == VMEvent.State.WAITING_FOR_INPUT) {
-        runAsync();
+        if (runScheduledOrRunning) {
+            throw new IllegalStateException(
+                    "La VM está ejecutándose.");
+        }
     }
+
+    if (vm.getState() != VMEvent.State.WAITING_FOR_INPUT) {
+        throw new IllegalStateException(
+                "La VM no está esperando una entrada.");
+    }
+
+    vm.submitInput(value);
+    vm.step();
 }
+
 
     public void reset() {
         synchronized (this) {

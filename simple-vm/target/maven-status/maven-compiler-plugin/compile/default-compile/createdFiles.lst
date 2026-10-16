@@ -1,5 +1,6 @@
 com/mycompany/simple/vm/devices/KeyboardController.class
 com/mycompany/simple/vm/controller/VMController.class
+com/mycompany/simple/vm/service/ProgramAssembler.class
 com/mycompany/simple/vm/VMExecutionException.class
 com/mycompany/simple/vm/devices/InputRequiredException.class
 com/mycompany/simple/vm/ui/ESFrame.class
@@ -10,6 +11,7 @@ com/mycompany/simple/vm/controller/VMController$1.class
 com/mycompany/simple/vm/test.class
 com/mycompany/simple/vm/VirtualMachine.class
 com/mycompany/simple/vm/ui/VMView.class
+com/mycompany/simple/vm/model/ProgramImage.class
 com/mycompany/simple/vm/ui/ExeFrame.class
 com/mycompany/simple/vm/VMEvent.class
 com/mycompany/simple/vm/VMEvent$Type.class
@@ -19,6 +21,7 @@ com/mycompany/simple/vm/model/CompilationResult.class
 com/mycompany/simple/vm/service/CompilationService.class
 com/mycompany/simple/vm/Instruction.class
 com/mycompany/simple/vm/Memory.class
+com/mycompany/simple/vm/service/ProgramAssembler$SourceLine.class
 com/mycompany/simple/vm/devices/PrinterController.class
 com/mycompany/simple/vm/ui/VMFrame.class
 com/mycompany/simple/vm/controller/VMController$2.class

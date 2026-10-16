@@ -216,7 +216,6 @@ public class VMController {
 
         updateMemory();
         rview.pcValue.setText(String.valueOf(event.getPC()));
-        eview.outputArea.setText(String.valueOf(event.getPC()));
         
     }
 
