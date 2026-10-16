@@ -1,0 +1,222 @@
+package com.mycompany.simple.vm.service;
+
+import com.mycompany.simple.vm.VMEvent;
+import com.mycompany.simple.vm.VMListener;
+import com.mycompany.simple.vm.VirtualMachine;
+import com.mycompany.simple.vm.model.CompilationResult;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+public class VMService implements AutoCloseable {
+
+    private final VirtualMachine vm;
+    private final CompilationService compilationService;
+    private final ExecutorService executor;
+
+    private boolean runScheduledOrRunning;
+    private boolean closed;
+
+    public VMService() {
+        vm = new VirtualMachine();
+        compilationService = new CompilationService();
+
+        executor = Executors.newSingleThreadExecutor(runnable -> {
+            Thread thread = new Thread(
+                    runnable,
+                    "vm-execution-thread"
+            );
+            thread.setDaemon(true);
+            return thread;
+        });
+    }
+
+    public CompilationResult loadProgram(String source) {
+        synchronized (this) {
+            if (runScheduledOrRunning) {
+                throw new IllegalStateException(
+                        "No se puede cargar un programa mientras "
+                                + "la VM está ejecutándose.");
+            }
+            ensureOpen();
+        }
+
+        CompilationResult result =
+                compilationService.compile(source);
+
+        if (!result.isSuccessful()) {
+            return result;
+        }
+
+        try {
+            vm.loadProgram(source);
+            return result;
+        } catch (RuntimeException ex) {
+            return new CompilationResult(
+                    false,
+                    0,
+                    Collections.singletonList(ex.getMessage())
+            );
+        }
+    }
+
+    /**
+     * Ejecuta una instrucción.
+     */
+    public void step() {
+        synchronized (this) {
+            ensureOpen();
+
+            if (runScheduledOrRunning) {
+                throw new IllegalStateException(
+                        "La VM está ejecutándose.");
+            }
+        }
+
+        vm.step();
+    }
+
+    /**
+     * Ejecuta el programa fuera del hilo de Swing.
+     */
+    public Future<?> runAsync() {
+        synchronized (this) {
+            ensureOpen();
+
+            if (runScheduledOrRunning) {
+                return null;
+            }
+
+            runScheduledOrRunning = true;
+
+            return executor.submit(this::executeAndRelease);
+        }
+    }
+
+    private void executeAndRelease() {
+        try {
+            vm.run();
+        } finally {
+            boolean resume;
+
+            synchronized (this) {
+                runScheduledOrRunning = false;
+
+                resume = !closed
+                        && vm.getState()
+                            == VMEvent.State.WAITING_FOR_INPUT
+                        && vm.getKeyboard().hasPendingInput();
+
+                if (resume) {
+                    runScheduledOrRunning = true;
+                    executor.execute(this::executeAndRelease);
+                }
+            }
+        }
+    }
+    
+    public void stop() {
+    vm.stop();
+}
+
+    /**
+     * Envía un valor a INPUT.
+     * Si la VM estaba esperando, reanuda la ejecución.
+     */
+    public void submitInput(int value) {
+    vm.submitInput(value);
+
+    if (vm.getState() == VMEvent.State.WAITING_FOR_INPUT) {
+        runAsync();
+    }
+}
+
+    public void reset() {
+        synchronized (this) {
+            ensureOpen();
+
+            if (runScheduledOrRunning) {
+                throw new IllegalStateException(
+                        "Espera a que termine la ejecución "
+                                + "antes de reiniciar la VM.");
+            }
+        }
+
+        vm.reset();
+    }
+    
+
+    public void addListener(VMListener listener) {
+        vm.addListener(listener);
+    }
+
+    public void removeListener(VMListener listener) {
+        vm.removeListener(listener);
+    }
+
+    public VMEvent.State getState() {
+        return vm.getState();
+    }
+
+    public Throwable getLastError() {
+        return vm.getLastError();
+    }
+
+    public int getPC() {
+        return vm.getCpu().getPC();
+    }
+
+    public int getIR() {
+        return vm.getCpu().getIR();
+    }
+
+    public int getACC() {
+        return vm.getCpu().getACC();
+    }
+
+    public boolean isZeroFlag() {
+        return vm.getCpu().isZeroFlag();
+    }
+
+    public boolean isHalted() {
+        return vm.isHalted();
+    }
+
+    public int readMemory(int address) {
+        return vm.getMemory().read(address);
+    }
+
+    public int getMemorySize() {
+        return vm.getMemory().getSize();
+    }
+
+    /**
+     * Acceso temporal para pruebas y operaciones aún no abstraídas.
+     */
+    public VirtualMachine getVirtualMachine() {
+        return vm;
+    }
+
+    private void ensureOpen() {
+        if (closed) {
+            throw new IllegalStateException(
+                    "VMService ya está cerrado.");
+        }
+    }
+    
+    public List<Integer> getOutputHistory() {
+    return (List<Integer>) vm.getPrinter().getOutputHistory();
+}
+
+    @Override
+    public void close() {
+        synchronized (this) {
+            closed = true;
+        }
+
+        executor.shutdownNow();
+    }
+}

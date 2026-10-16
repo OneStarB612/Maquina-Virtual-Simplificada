@@ -1,21 +1,50 @@
 package com.mycompany.simple.vm.devices;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * Keyboard Controller simulating standard user input.
- * Implements the DeviceController interface.
- * Supports queuing predefined values for test automation.
- */
 public class KeyboardController implements DeviceController {
-    private final List<Integer> inputQueue = new ArrayList<>();
-    private Scanner scanner;
+
+    private final Queue<Integer> inputQueue =
+            new ConcurrentLinkedQueue<>();
 
     @Override
     public String getDeviceName() {
         return "Keyboard";
+    }
+
+    /**
+     * Recibe un valor desde la interfaz gráfica o desde las pruebas.
+     * @param value
+     */
+    public void submitInput(int value) {
+        inputQueue.offer(value);
+    }
+
+    /**
+     * Alias para pruebas existentes.
+     * @param value
+     */
+    public void queueInput(int value) {
+        submitInput(value);
+    }
+
+    /**
+     * No bloquea el hilo de ejecución.
+     * @return 
+     */
+    public int read() {
+        Integer value = inputQueue.poll();
+
+        if (value == null) {
+            throw new InputRequiredException();
+        }
+
+        return value;
+    }
+
+    public boolean hasPendingInput() {
+        return !inputQueue.isEmpty();
     }
 
     @Override
@@ -23,34 +52,7 @@ public class KeyboardController implements DeviceController {
         inputQueue.clear();
     }
 
-    /**
-     * Clears any queued inputs.
-     */
     public void clear() {
         reset();
-    }
-
-    /**
-     * Queues a value to be read next. Useful for automated unit testing.
-     * @param value The integer value to enqueue.
-     */
-    public void queueInput(int value) {
-        inputQueue.add(value);
-    }
-
-    /**
-     * Reads a value. Retrieves the next queued value if available;
-     * otherwise, prompts the user for real-time terminal input.
-     * @return The integer read.
-     */
-    public int read() {
-        if (!inputQueue.isEmpty()) {
-            return inputQueue.remove(0);
-        }
-        if (scanner == null) {
-            scanner = new Scanner(System.in);
-        }
-        System.out.print("[KEYBOARD INPUT] Enter an integer: ");
-        return scanner.nextInt();
     }
 }
