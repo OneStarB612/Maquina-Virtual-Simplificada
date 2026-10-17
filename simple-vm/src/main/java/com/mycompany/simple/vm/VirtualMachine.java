@@ -108,22 +108,27 @@ public class VirtualMachine {
 }
     }
 
-    public void reset() {
-        cpu.reset();
-        memory.clear();
-        keyboard.clear();
-        printer.clear();
-        disk.clear();
+    private void clearState() {
+    cpu.reset();
+    memory.clear();
+    keyboard.clear();
+    printer.clear();
+    disk.clear();
 
-        lastError = null;
-        state = VMEvent.State.READY;
+    lastError = null;
+    stopRequested = false;
+    state = VMEvent.State.READY;
+}
 
-        publish(
-                VMEvent.Type.RESET,
-                "Máquina virtual reiniciada.",
-                null
-        );
-    }
+public void reset() {
+    clearState();
+
+    publish(
+            VMEvent.Type.RESET,
+            "Máquina virtual reiniciada.",
+            null
+    );
+}
     
     public void stop() {
     stopRequested = true;
@@ -150,7 +155,7 @@ public class VirtualMachine {
             ProgramImage program = new ProgramAssembler().assemble(source);
             int[] image = program.getMemoryImage();
             
-            reset();
+            clearState();
             
             int usedMemory = program.getInstructionCount() + program.getDataCount();
             
@@ -217,12 +222,17 @@ public class VirtualMachine {
                 : VMEvent.State.PAUSED;
 
         Instruction executed =
-                Instruction.decodeInstruction(cpu.getIR());
+        Instruction.decodeInstruction(cpu.getIR());
 
-        VMEvent.Type eventType =
-                executed == Instruction.OUTPUT
-                        ? VMEvent.Type.OUTPUT
-                        : VMEvent.Type.INSTRUCTION_EXECUTED;
+VMEvent.Type eventType;
+
+if (executed == Instruction.STORE) {
+    eventType = VMEvent.Type.MEMORY_MODIFIED;
+} else if (executed == Instruction.OUTPUT) {
+    eventType = VMEvent.Type.OUTPUT;
+} else {
+    eventType = VMEvent.Type.INSTRUCTION_EXECUTED;
+}
 
         publish(
                 eventType,

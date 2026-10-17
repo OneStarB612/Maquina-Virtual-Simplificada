@@ -23,6 +23,7 @@ public class VMController {
     private final VMView rview;
     private final VMService service;
     private boolean auxiliaryWindowsShown;
+    private String tablaHead = "        | Dirección |   Valor   |\n";
 
     public VMController(
             VMFrame vm,
@@ -43,8 +44,7 @@ public class VMController {
         eview.setVisible(false);
         rview.setVisible(false);
 
-        rview.memoryTable.addColumn("Direccion");
-        rview.memoryTable.addColumn("Vslor");
+        rview.areaTable.setText(tablaHead);
         
     }
 
@@ -105,6 +105,7 @@ public class VMController {
     private void clearProgram() {
         vm.programArea.setText("");
         appendLog("Editor limpiado.");
+        
     }
 
     private void runProgram() {
@@ -132,6 +133,7 @@ public class VMController {
         eview.outputArea.setText("");
         eview.logArea.setText("");
         updateControls(service.getState());
+        rview.areaTable.setText(tablaHead);
     }
 
     private void submitInput() {
@@ -190,22 +192,29 @@ public class VMController {
             appendLog(event.getMessage());
 
             switch (event.getType()) {
-                case PROGRAM_LOADED:
-                case RESET:
-                    updateMemory();
-                    break;
+    case PROGRAM_LOADED:
+        updateMemory();
+        break;
 
-                case HALTED:
-                    appendLog("Ejecución finalizada.");
-                    break;
+    case RESET:
+        updateMemory();
+        break;
 
-                case ERROR:
-                    appendLog("Error: " + event.getMessage());
-                    break;
+    case MEMORY_MODIFIED:
+        updateMemory();
+        break;
 
-                default:
-                    break;
-            }
+    case HALTED:
+        appendLog("Ejecución finalizada.");
+        break;
+
+    case ERROR:
+        appendLog("Error: " + event.getMessage());
+        break;
+
+    default:
+        break;
+}
         });
     }
 
@@ -213,26 +222,30 @@ public class VMController {
         rview.irValue.setText(String.valueOf(event.getIR()));
         rview.accValue.setText(String.valueOf(event.getACC()));
         rview.zeroFlagValue.setText(String.valueOf(event.isZeroFlag()));
-
-        updateMemory();
         rview.pcValue.setText(String.valueOf(event.getPC()));
         
     }
-
+    
+    
     private void updateMemory() {
+    StringBuilder memory = new StringBuilder();
+    int memorySize = service.getMemorySize();
 
-        for (int address = 0;
-                address < service.getMemorySize();
-                address++) {
+    for (int address = 0; address < memorySize; address++) {
+        int value = service.readMemory(address);
 
-            int value = service.readMemory(address);
-
-            if (value != 0) {
-                rview.memoryTable.addRow(
-                        new Object[]{address, value});
-            }
+        if (value != 0) {
+            memory.append("        | ")
+                  .append(address)
+                  .append(" | ")
+                  .append(value)
+                  .append(" |")
+                  .append(System.lineSeparator());
         }
     }
+
+    rview.areaTable.append(memory.toString());
+}
 
     private void updateIO(VMEvent event) {
         switch (event.getType()) {

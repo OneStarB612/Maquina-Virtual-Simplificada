@@ -1,11 +1,3 @@
-; sumar dos números ingresados por teclado
-INPUT
-STORE 20
-INPUT
-ADD 20
-OUTPUT
-HALT
-
 ; sumar dos números desde memoria
 
 
@@ -17,3 +9,88 @@ HALT
 numero1: DATA 5
 numero2: DATA 7
 
+; sumar dos números ingresados por teclado
+INPUT
+STORE 20
+INPUT
+ADD 20
+OUTPUT
+HALT
+
+; cargar un valor en ACC
+LOAD numero
+OUTPUT
+HALT
+
+numero: DATA 25
+
+; guardar acc en memoria
+LOAD numero
+STORE resultado
+LOAD resultado
+OUTPUT
+HALT
+
+numero: DATA 30
+resultado: DATA 0
+
+; sumar un valor a acc
+LOAD numero1
+ADD numero2
+OUTPUT
+HALT
+
+numero1: DATA 10
+numero2: DATA 20
+
+; restar un valor a acc
+LOAD numero1
+SUB numero2
+OUTPUT
+HALT
+
+numero1: DATA 30
+numero2: DATA 10
+
+; saltar una instruccion
+JMP destino
+LOAD ignorado
+destino: LOAD numero
+OUTPUT
+HALT
+
+ignorado: DATA 99
+numero: DATA 15
+
+; saltar si acc es cero
+LOAD cero
+JZ destino
+LOAD alternativa
+OUTPUT
+HALT
+destino: LOAD correcto
+OUTPUT
+HALT
+
+cero: DATA 0
+alternativa: DATA 5
+correcto: DATA 9
+
+; recibir un valor por teclado
+INPUT
+OUTPUT
+HALT
+
+; mostrar un valor
+LOAD numero
+OUTPUT
+HALT
+
+numero: DATA 123
+
+; terminar ejecución
+LOAD numero
+OUTPUT
+HALT
+
+numero: DATA 7

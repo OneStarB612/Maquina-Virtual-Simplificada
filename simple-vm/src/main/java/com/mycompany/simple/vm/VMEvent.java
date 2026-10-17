@@ -4,15 +4,15 @@ package com.mycompany.simple.vm;
 public final class VMEvent {
 
     public enum Type {
-    RESET,
-    PROGRAM_LOADED,
-    INSTRUCTION_EXECUTED,
-    OUTPUT,
-    INPUT_REQUIRED,
-    STOPPED,
-    HALTED,
-    ERROR,
-    STATE_CHANGED
+        RESET,
+        PROGRAM_LOADED,
+        INSTRUCTION_EXECUTED,
+        MEMORY_MODIFIED,
+        OUTPUT,
+        INPUT_REQUIRED,STOPPED,
+        HALTED,
+        ERROR,
+        STATE_CHANGED
     }
 
 public enum State {

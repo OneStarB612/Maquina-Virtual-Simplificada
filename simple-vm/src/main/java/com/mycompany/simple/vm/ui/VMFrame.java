@@ -2,12 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+
 package com.mycompany.simple.vm.ui;
 
 /**
  *
  * @author steven
  */
+
+// Ventana principal: editor, botones de cargar, limpiar, run, step, reset, stop, reset
 public class VMFrame extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VMFrame.class.getName());
@@ -69,7 +72,7 @@ public class VMFrame extends javax.swing.JFrame {
         clearButton.setText("Limpiar");
         clearButton.addActionListener(this::clearButtonActionPerformed);
 
-        EmuButton.setText("Emular");
+        EmuButton.setText("Ejemplos");
         EmuButton.addActionListener(this::EmuButtonActionPerformed);
 
         jPanel5.setBackground(new java.awt.Color(204, 204, 204));
@@ -97,7 +100,7 @@ public class VMFrame extends javax.swing.JFrame {
                 .addComponent(clearButton)
                 .addGap(0, 0, 0)
                 .addComponent(EmuButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
         );
