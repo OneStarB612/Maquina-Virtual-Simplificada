@@ -1,4 +1,3 @@
-
 package com.mycompany.simple.vm.devices;
 
 import java.util.ArrayList;

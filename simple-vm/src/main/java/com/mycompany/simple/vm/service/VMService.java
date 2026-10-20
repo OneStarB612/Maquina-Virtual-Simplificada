@@ -17,6 +17,7 @@ public class VMService implements AutoCloseable {
     private final CompilationService compilationService;
     private final ExecutorService executor;
 
+    private boolean resumeAfterInput;
     private boolean runScheduledOrRunning;
     private boolean closed;
 
@@ -99,23 +100,28 @@ public class VMService implements AutoCloseable {
     private void executeAndRelease() {
         try {
             vm.run();
-        } finally {
-            boolean resume;
+        } 
+finally {
+    synchronized (this) {
+        runScheduledOrRunning = false;
 
-            synchronized (this) {
-                runScheduledOrRunning = false;
+        boolean waiting =
+                vm.getState() == VMEvent.State.WAITING_FOR_INPUT;
 
-                resume = !closed
-                        && vm.getState()
-                            == VMEvent.State.WAITING_FOR_INPUT
-                        && vm.getKeyboard().hasPendingInput();
+        boolean resume = !closed
+                && waiting
+                && vm.getKeyboard().hasPendingInput();
 
-                if (resume) {
-                    runScheduledOrRunning = true;
-                    executor.execute(this::executeAndRelease);
-                }
-            }
+        resumeAfterInput = !closed && waiting && !resume;
+
+        if (resume) {
+            resumeAfterInput = false;
+            runScheduledOrRunning = true;
+            executor.execute(this::executeAndRelease);
         }
+    }
+}
+
     }
     
     public void stop() {
@@ -123,28 +129,39 @@ public class VMService implements AutoCloseable {
 }
 
     /**
- * Envía el dato a INPUT y ejecuta únicamente esa instrucción.
- */
-public void submitInput(int value) {
-    synchronized (this) {
-        ensureOpen();
+    * Envía el dato a INPUT y ejecuta únicamente esa instrucción.
+     * @param value
+    */
 
-        if (runScheduledOrRunning) {
-            throw new IllegalStateException(
+    public void submitInput(int value) {
+        boolean resumeAutomatically;
+
+        synchronized (this) {
+            ensureOpen();
+
+            if (runScheduledOrRunning) {
+                throw new IllegalStateException(
                     "La VM está ejecutándose.");
+            }
+
+            if (vm.getState() != VMEvent.State.WAITING_FOR_INPUT) {
+                throw new IllegalStateException(
+                        "La VM no está esperando una entrada.");
+            }
+
+            resumeAutomatically = resumeAfterInput;
+            resumeAfterInput = false;
+        }
+
+        vm.submitInput(value);
+        vm.step();
+
+        if (resumeAutomatically
+                && vm.getState() == VMEvent.State.PAUSED) {
+            runAsync();
         }
     }
-
-    if (vm.getState() != VMEvent.State.WAITING_FOR_INPUT) {
-        throw new IllegalStateException(
-                "La VM no está esperando una entrada.");
-    }
-
-    vm.submitInput(value);
-    vm.step();
-}
-
-
+    
     public void reset() {
         synchronized (this) {
             ensureOpen();
@@ -206,6 +223,7 @@ public void submitInput(int value) {
 
     /**
      * Acceso temporal para pruebas y operaciones aún no abstraídas.
+     * @return 
      */
     public VirtualMachine getVirtualMachine() {
         return vm;

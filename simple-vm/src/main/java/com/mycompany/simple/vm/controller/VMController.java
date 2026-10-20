@@ -3,36 +3,38 @@ package com.mycompany.simple.vm.controller;
 import com.mycompany.simple.vm.VMEvent;
 import com.mycompany.simple.vm.service.VMService;
 import com.mycompany.simple.vm.model.CompilationResult;
-import com.mycompany.simple.vm.ui.ESFrame;
-import com.mycompany.simple.vm.ui.ExeFrame;
+import com.mycompany.simple.vm.service.ProgramFileService;
+import com.mycompany.simple.vm.ui.ConsoleFrame;
+import com.mycompany.simple.vm.ui.RegFrame;
 import com.mycompany.simple.vm.ui.VMFrame;
-import com.mycompany.simple.vm.ui.VMView;
+import java.io.File;
+import java.io.IOException;
+import javax.swing.JOptionPane;
 
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.List;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
 
 public class VMController {
 
     private final VMFrame vm;
-    private final ESFrame eview;
-    private final VMView rview;
+    private final ConsoleFrame console;
+    private final RegFrame rview;
     private final VMService service;
-    private boolean auxiliaryWindowsShown;
-    private String tablaHead = "        | Dirección |   Valor   |\n";
+    private final String tablaHead = "        | Dirección |   Valor   |\n";
+    private final ProgramFileService programFileService;
+    private File currentFile;
+    private boolean initializingExamples;
 
     public VMController(
             VMFrame vm,
-            ESFrame eview,
-            VMView rview,
+            ConsoleFrame console,
+            RegFrame rview,
             VMService service) {
 
         this.vm = vm;
-        this.eview = eview;
+        this.console = console;
         this.rview = rview;
         this.service = service;
 
@@ -41,23 +43,26 @@ public class VMController {
 
         service.addListener(this::handleVMEvent);
 
-        eview.setVisible(false);
+        console.setVisible(false);
         rview.setVisible(false);
-
         rview.areaTable.setText(tablaHead);
         
-    }
+        this.programFileService = new ProgramFileService(
+        service.getVirtualMachine().getDisk());
 
+        initializeExamples();
+    }
+    
     private void configureWindows() {
         vm.setLocationRelativeTo(null);
 
-        eview.setDefaultCloseOperation(
+        console.setDefaultCloseOperation(
                 javax.swing.JFrame.HIDE_ON_CLOSE);
 
         rview.setDefaultCloseOperation(
                 javax.swing.JFrame.HIDE_ON_CLOSE);
 
-        eview.setLocation(
+        console.setLocation(
                 vm.getX() + vm.getWidth(),
                 vm.getY());
 
@@ -69,22 +74,248 @@ public class VMController {
     private void bindActions() {
         vm.loadButton.addActionListener(e -> loadProgram());
         vm.clearButton.addActionListener(e -> clearProgram());
-        vm.runButton.addActionListener(e -> runProgram());
-        vm.stepButton.addActionListener(e -> executeStep());
-        vm.stopButton.addActionListener(e -> stopProgram());
-        vm.resetButton.addActionListener(e -> resetProgram());
+        rview.runButton.addActionListener(e -> runProgram());
+        rview.stepButton.addActionListener(e -> executeStep());
+        rview.stopButton.addActionListener(e -> stopProgram());
+        rview.resetButton.addActionListener(e -> resetProgram());
+        vm.openButton.addActionListener(e -> openProgram());
+        vm.saveButton.addActionListener(e -> saveProgram());
+        vm.exampleBox.addActionListener(e -> loadSelectedExample());
 
-        eview.submitInputButton.addActionListener(
-                e -> submitInput());
-
+        console.addSubmitListener(e -> submitInput());
+        
         vm.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 service.close();
-                eview.dispose();
+                console.dispose();
                 rview.dispose();
             }
         });
+    }
+
+    private void initializeExamples() {
+        initializingExamples = true;
+
+        try {
+            programFileService.saveExample("Cargar", 
+                    """
+                    ; cargar un valor en ACC
+                    LOAD numero
+                    OUTPUT
+                    HALT
+                
+                    numero: DATA 25
+                    """);
+
+            programFileService.saveExample("Guardar",
+                    """
+                    ; guardar ACC en memoria
+                    LOAD numero
+                    STORE resultado
+                    LOAD resultado
+                    OUTPUT
+                    HALT
+                    
+                    numero: DATA 30
+                    resultado: DATA 0
+                    """);
+
+            programFileService.saveExample("Sumar",
+                    """
+                    ; sumar un valor a ACC
+                    LOAD numero1
+                    ADD numero2
+                    OUTPUT
+                    HALT
+                    
+                    numero1: DATA 10
+                    numero2: DATA 20
+                    """);
+
+            programFileService.saveExample("Restar",
+                    """
+                    ; restar un valor a ACC
+                    LOAD numero1
+                    SUB numero2
+                    OUTPUT
+                    HALT
+                    
+                    numero1: DATA 30
+                    numero2: DATA 10
+                    """);
+
+            programFileService.saveExample("Saltar",
+                    """
+                    ; saltar una instruccion
+                    JMP destino
+                    LOAD ignorado
+                    destino: LOAD numero
+                    OUTPUT
+                    HALT
+                    
+                    ignorado: DATA 99
+                    numero: DATA 15
+                    """);
+            
+            programFileService.saveExample("Cero",
+                    """
+                    ; saltar si ACC es cero
+                    LOAD cero
+                    JZ destino
+                    LOAD alternativa
+                    OUTPUT
+                    HALT
+                    destino: LOAD correcto
+                    OUTPUT
+                    HALT
+                    
+                    cero: DATA 0
+                    alternativa: DATA 5
+                    correcto: DATA 9
+                    """);
+
+            programFileService.saveExample("Entrada",
+                    """
+                    ; recibir un valor por teclado
+                    INPUT
+                    OUTPUT
+                    HALT
+                    """);
+
+            programFileService.saveExample("Salida",
+                    """
+                    ; mostrar un valor
+                    LOAD numero
+                    OUTPUT
+                    HALT
+                    
+                    numero: DATA 123
+                    """);
+
+            programFileService.saveExample("Terminar",
+                    """
+                    ; terminar ejecucion
+                    LOAD numero
+                    OUTPUT
+                    HALT
+                    
+                    numero: DATA 7
+                    """);
+            
+            programFileService.saveExample("Memoria",
+                    """
+                    ; sumar dos numeros desde memoria
+                    LOAD numero1
+                    ADD numero2
+                    OUTPUT
+                    HALT
+                                                      
+                    numero1: DATA 5
+                    numero2: DATA 7
+                    """);
+
+            programFileService.saveExample("Teclado",
+                    """
+                    ; sumar dos numeros ingresados por teclado
+                    INPUT
+                    STORE 20
+                    INPUT
+                    ADD 20
+                    OUTPUT
+                    HALT
+                    """);
+
+            programFileService.saveExample("Impresora",
+                    """
+                    ; recibir un dato, guardarlo e imprimirlo
+                    INPUT
+                    STORE 20
+                    LOAD 20
+                    OUTPUT
+                    HALT
+                    """);
+        } finally {
+            initializingExamples = false;
+        }
+    }
+    
+    private void loadSelectedExample() {
+        if (initializingExamples) {
+            return;
+        }
+
+        String selected = (String) vm.exampleBox.getSelectedItem();
+
+        if (selected == null) {
+            return;
+        }
+
+        try {
+            String source = programFileService.loadExample(selected);
+
+            vm.programArea.setText(source);
+            vm.programArea.setCaretPosition(0);
+            currentFile = null;
+        
+            appendLog("Ejemplo \"" + selected
+                    + "\" cargado desde el disco simulado.");
+
+        } catch (RuntimeException ex) {
+            appendLog("Error al leer el disco simulado: "
+                    + ex.getMessage());
+        }
+    }
+
+    private void openProgram() {
+        try {
+            String content = programFileService.openFile(
+                    vm.openChoose, vm
+            );
+
+            if (content == null) {
+                return;
+            }
+
+            vm.programArea.setText(content);
+            vm.programArea.setCaretPosition(0);
+            currentFile = vm.openChoose.getSelectedFile();
+
+            appendLog("Archivo leído desde el sistema de archivos: "
+                    + currentFile.getName());
+
+        } catch (IOException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    vm,
+                    "No se pudo abrir el archivo:\n" + ex.getMessage(),
+                    "Error al abrir",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void saveProgram() {
+        try {
+            File saved = programFileService.saveFile(
+                    vm.openChoose,
+                    vm,
+                    vm.programArea.getText(),
+                    currentFile
+            );
+
+            if (saved != null) {
+                currentFile = saved;
+                appendLog("Archivo guardado: " + saved.getName());
+            }
+            
+        } catch (IOException | RuntimeException ex) {
+            JOptionPane.showMessageDialog(
+                    vm,
+                    "No se pudo guardar el archivo:\n" + ex.getMessage(),
+                    "Error al guardar",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     private void loadProgram() {
@@ -92,13 +323,17 @@ public class VMController {
                 service.loadProgram(vm.programArea.getText());
 
         appendLog(result.getSummary());
+        
+        if (!showAuxiliaryWindows()) {
+            return;
+        }
 
         if (!result.isSuccessful()) {
             result.getErrors().forEach(this::appendLog);
             return;
         }
-
-        appendLog("Programa cargado correctamente.");
+        
+                appendLog("Programa cargado correctamente.");
         updateControls(service.getState());
     }
 
@@ -127,95 +362,156 @@ public class VMController {
     private void stopProgram() {
         service.stop();
     }
-
     private void resetProgram() {
-        service.reset();
-        eview.outputArea.setText("");
-        eview.logArea.setText("");
-        updateControls(service.getState());
-        rview.areaTable.setText(tablaHead);
+        try {
+            service.reset();
+            console.setInputEnabled(false);
+            updateControls(service.getState());
+            rview.areaTable.setText(tablaHead);
+        } catch (IllegalStateException ex) {
+            console.appendLine(
+                    "No se pudo reiniciar: " + ex.getMessage());
+        }
     }
-
     private void submitInput() {
-        String text = eview.inputField.getText().trim();
-
-        if (text.isEmpty()) {
-            appendLog("Introduce un número entero.");
+        if (service.getState() != VMEvent.State.WAITING_FOR_INPUT) {
+            console.appendLine(
+                    "La máquina virtual no está esperando una entrada.");
             return;
         }
 
+        String text = console.getInputText();
+
+        if (text.isBlank()) {
+            console.appendLine("Introduce un número entero.");
+            return;
+        }
+        
         try {
             int value = Integer.parseInt(text);
 
             service.submitInput(value);
-            eview.inputField.setText("");
-
+            
+            console.appendLine("> " + value);
+            console.clearInput();
+            console.setInputEnabled(false);
+        
         } catch (NumberFormatException ex) {
-            appendLog("Entrada inválida: debe ser un número entero.");
+            console.appendLine(
+                    "Entrada inválida: debe ser un número entero.");
+
+        } catch (IllegalStateException ex) {
+            console.appendLine(
+                    "No se pudo enviar la entrada: " + ex.getMessage());
         }
     }
-
+    
     private boolean showAuxiliaryWindows() {
-        if (auxiliaryWindowsShown) {
-            eview.setVisible(true);
-            rview.setVisible(true);
-            return true;
-        }
+        VMEvent.State state = service.getState();
 
-        if (service.getState() != VMEvent.State.READY
-                && service.getState() != VMEvent.State.PAUSED) {
-            appendLog("Carga un programa antes de ejecutarlo.");
+        if (state != VMEvent.State.READY
+                && state != VMEvent.State.PAUSED
+                && state != VMEvent.State.WAITING_FOR_INPUT) {
+            
+            console.appendLine(
+                    "Carga un programa válido antes de ejecutarlo.");
             return false;
         }
 
-        auxiliaryWindowsShown = true;
 
-        eview.setLocation(
+        console.setLocation(
                 vm.getX() + vm.getWidth(),
                 vm.getY());
 
         rview.setLocation(
                 vm.getX(),
                 vm.getY() + vm.getHeight());
-
-        eview.setVisible(true);
+        
+        console.setVisible(true);
         rview.setVisible(true);
 
         return true;
     }
-
+    
     private void handleVMEvent(VMEvent event) {
         SwingUtilities.invokeLater(() -> {
             updateRegisters(event);
             updateControls(event.getState());
             updateIO(event);
-            appendLog(event.getMessage());
-
+            
             switch (event.getType()) {
-    case PROGRAM_LOADED:
-        updateMemory();
-        break;
+                case PROGRAM_LOADED:
+                    updateMemory();
+                    console.appendLine(event.getMessage());
+                    break;
 
-    case RESET:
-        updateMemory();
-        break;
+                case RESET:
+                    updateMemory();
+                    console.clearHistory();
+                    console.appendLine(event.getMessage());
+                    break;
 
-    case MEMORY_MODIFIED:
-        updateMemory();
-        break;
+                case MEMORY_MODIFIED:
+                    updateMemory();
+                    console.appendLine(event.getMessage());
+                    break;
 
-    case HALTED:
-        appendLog("Ejecución finalizada.");
-        break;
+                case INPUT_REQUIRED:
+                    console.appendLine(
+                            "Entrada requerida: introduce un entero.");
+                    console.setInputEnabled(true);
+                    break;
 
-    case ERROR:
-        appendLog("Error: " + event.getMessage());
-        break;
+                case OUTPUT:
+                    // El valor se presenta en updateIO().
+                    console.appendLine(event.getMessage());
+                    break;
 
-    default:
-        break;
-}
+                case HALTED:
+                    console.setInputEnabled(false);
+                    console.appendLine(event.getMessage());
+                    console.appendLine("Ejecución finalizada.");
+                    break;
+
+                    case ERROR:
+                    console.setInputEnabled(false);
+                    console.appendLine(
+                            "Error: " + event.getMessage());
+                    break;
+
+                case STOPPED:
+                    console.appendLine(event.getMessage());
+                    break;
+                    
+                default:
+                    if (event.getType()
+                            == VMEvent.Type.INSTRUCTION_EXECUTED
+                            || event.getType()
+                            == VMEvent.Type.STATE_CHANGED) {
+                        console.appendLine(event.getMessage());
+                    }
+                    break;
+            }
         });
+    }
+
+    private void updateIO(VMEvent event) {
+        if (event.getType() != VMEvent.Type.OUTPUT) {
+            return;
+        }
+
+        java.util.List<Integer> history = service.getOutputHistory();
+
+        console.appendLine("Impresora simulada utilizada.");
+
+        if (history.isEmpty()) {
+            console.appendLine("La impresora no tiene valores registrados.");
+            return;
+        }
+
+        int lastValue = history.get(history.size() - 1);
+
+        console.appendLine("Último valor en outputHistory: " + lastValue);
     }
 
     private void updateRegisters(VMEvent event) {
@@ -228,57 +524,42 @@ public class VMController {
     
     
     private void updateMemory() {
-    StringBuilder memory = new StringBuilder();
-    int memorySize = service.getMemorySize();
+        StringBuilder memory = new StringBuilder();
+        int memorySize = service.getMemorySize();
 
-    for (int address = 0; address < memorySize; address++) {
-        int value = service.readMemory(address);
+        for (int address = 0; address < memorySize; address++) {
+            int value = service.readMemory(address);
 
-        if (value != 0) {
-            memory.append("        | ")
-                  .append(address)
-                  .append(" | ")
-                  .append(value)
-                  .append(" |")
-                  .append(System.lineSeparator());
+            if (value != 0) {
+                memory.append("        | ")
+                      .append(address)
+                      .append(" | ")
+                      .append(value)
+                      .append(" |")
+                      .append(System.lineSeparator());
+            }
         }
+
+        rview.areaTable.setText(tablaHead);
+        rview.areaTable.append(memory.toString());
     }
-
-    rview.areaTable.append(memory.toString());
-}
-
-    private void updateIO(VMEvent event) {
-        switch (event.getType()) {
-            case OUTPUT:
-                eview.appendOutput(event.getACC());
-                break;
-
-            case ERROR:
-                eview.appendLog(
-                        "Error: " + event.getMessage());
-                break;
-
-            default:
-                break;
-        }
-    }
-
     private void updateControls(VMEvent.State state) {
         boolean running = state == VMEvent.State.RUNNING;
         boolean finished = state == VMEvent.State.HALTED
                 || state == VMEvent.State.ERROR;
 
-        vm.runButton.setEnabled(!running && !finished);
-        vm.stepButton.setEnabled(!running && !finished);
-        vm.stopButton.setEnabled(running);
-        vm.resetButton.setEnabled(!running);
+        rview.runButton.setEnabled(!running && !finished);
+        rview.stepButton.setEnabled(!running && !finished);
+        rview.stopButton.setEnabled(running);
+        rview.resetButton.setEnabled(!running);
 
         rview.statusLabel.setText(state.name());
+        console.setInputEnabled(
+                state == VMEvent.State.WAITING_FOR_INPUT);
     }
 
     private void appendLog(String message) {
-        if (message != null && !message.isBlank()) {
-            eview.appendLog(message);
-        }
+        console.appendLine(message);
     }
+    
 }

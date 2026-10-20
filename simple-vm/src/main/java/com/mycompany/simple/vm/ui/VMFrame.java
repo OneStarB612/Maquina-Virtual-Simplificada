@@ -31,140 +31,117 @@ public class VMFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        openChoose = new javax.swing.JFileChooser();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        loadButton = new javax.swing.JButton();
-        clearButton = new javax.swing.JButton();
-        EmuButton = new javax.swing.JButton();
-        jPanel5 = new javax.swing.JPanel();
-        runButton = new javax.swing.JButton();
-        stepButton = new javax.swing.JButton();
-        stopButton = new javax.swing.JButton();
-        resetButton = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         programArea = new javax.swing.JTextArea();
+        jPanel1 = new javax.swing.JPanel();
+        buttonsPanel = new javax.swing.JPanel();
+        openButton = new javax.swing.JButton();
+        saveButton = new javax.swing.JButton();
+        clearButton = new javax.swing.JButton();
+        loadButton = new javax.swing.JButton();
+        exampleBox = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(460, 300));
+        setPreferredSize(new java.awt.Dimension(460, 300));
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel2.setMinimumSize(new java.awt.Dimension(460, 300));
 
-        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel3.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel3.setMinimumSize(new java.awt.Dimension(460, 244));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(27, 181, -1, -1));
-
-        jPanel3.setBackground(new java.awt.Color(204, 204, 204));
-
-        loadButton.setText("Cargar");
-
-        clearButton.setText("Limpiar");
-        clearButton.addActionListener(this::clearButtonActionPerformed);
-
-        EmuButton.setText("Ejemplos");
-        EmuButton.addActionListener(this::EmuButtonActionPerformed);
-
-        jPanel5.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel5.setLayout(new javax.swing.BoxLayout(jPanel5, javax.swing.BoxLayout.LINE_AXIS));
-
-        runButton.setText("Run");
-        jPanel5.add(runButton);
-
-        stepButton.setText("Step");
-        jPanel5.add(stepButton);
-
-        stopButton.setText("stop");
-        jPanel5.add(stopButton);
-
-        resetButton.setText("reset");
-        jPanel5.add(resetButton);
+        programArea.setBackground(new java.awt.Color(51, 51, 51));
+        programArea.setColumns(20);
+        programArea.setForeground(new java.awt.Color(255, 255, 255));
+        programArea.setRows(5);
+        programArea.setToolTipText("Editor de código");
+        programArea.setCaretColor(new java.awt.Color(255, 255, 255));
+        jScrollPane1.setViewportView(programArea);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(loadButton)
-                .addGap(0, 0, 0)
-                .addComponent(clearButton)
-                .addGap(0, 0, 0)
-                .addComponent(EmuButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(loadButton)
-                            .addComponent(clearButton)
-                            .addComponent(EmuButton)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(15, 15, 15))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 90));
+        jPanel1.setBackground(new java.awt.Color(153, 153, 153));
 
-        jPanel4.setBackground(new java.awt.Color(204, 204, 204));
+        buttonsPanel.setBackground(new java.awt.Color(204, 204, 204));
+        buttonsPanel.setLayout(new javax.swing.BoxLayout(buttonsPanel, javax.swing.BoxLayout.LINE_AXIS));
 
-        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
+        openButton.setText("Abrir");
+        buttonsPanel.add(openButton);
 
-        programArea.setBackground(new java.awt.Color(51, 51, 51));
-        programArea.setColumns(20);
-        programArea.setRows(5);
-        jScrollPane1.setViewportView(programArea);
+        saveButton.setText("Guardar");
+        buttonsPanel.add(saveButton);
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
+        clearButton.setText("Limpiar");
+        buttonsPanel.add(clearButton);
+
+        loadButton.setText("Emular");
+        buttonsPanel.add(loadButton);
+
+        exampleBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cargar", "Guardar", "Sumar", "Restar", "Saltar", "Cero", "Entrada", "Salida", "Terminar", "Memoria", "Teclado", "Impresora" }));
+        exampleBox.setLightWeightPopupEnabled(false);
+        exampleBox.setMaximumSize(new java.awt.Dimension(105, 32));
+        exampleBox.setMinimumSize(new java.awt.Dimension(105, 32));
+        exampleBox.setPreferredSize(new java.awt.Dimension(105, 32));
+        buttonsPanel.add(exampleBox);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(43, Short.MAX_VALUE))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 590, 160));
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        getContentPane().add(jPanel2);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_clearButtonActionPerformed
-
-    private void EmuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EmuButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_EmuButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -192,19 +169,17 @@ public class VMFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.JButton EmuButton;
+    private javax.swing.JPanel buttonsPanel;
     public javax.swing.JButton clearButton;
+    public javax.swing.JComboBox<String> exampleBox;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JButton loadButton;
+    public javax.swing.JButton openButton;
+    public javax.swing.JFileChooser openChoose;
     public javax.swing.JTextArea programArea;
-    public javax.swing.JButton resetButton;
-    public javax.swing.JButton runButton;
-    public javax.swing.JButton stepButton;
-    public javax.swing.JButton stopButton;
+    public javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
 }

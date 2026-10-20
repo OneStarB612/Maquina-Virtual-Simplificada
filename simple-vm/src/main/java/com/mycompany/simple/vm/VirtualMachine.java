@@ -9,7 +9,6 @@ import com.mycompany.simple.vm.devices.InputRequiredException;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.Locale;
 
 public class VirtualMachine {
 
@@ -113,7 +112,6 @@ public class VirtualMachine {
     memory.clear();
     keyboard.clear();
     printer.clear();
-    disk.clear();
 
     lastError = null;
     stopRequested = false;

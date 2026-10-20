@@ -15,9 +15,11 @@
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/model/ProgramImage.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/service/CompilationService.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/service/ProgramAssembler.java
+/home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/service/ProgramFileService.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/service/VMService.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/test.java
+/home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/ui/ConsoleFrame.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/ui/ESFrame.java
-/home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/ui/ExeFrame.java
+/home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/ui/RegFrame.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/ui/VMFrame.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/ui/VMView.java

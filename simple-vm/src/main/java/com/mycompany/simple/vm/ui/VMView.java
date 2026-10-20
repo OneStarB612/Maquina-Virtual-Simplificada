@@ -10,10 +10,10 @@ package com.mycompany.simple.vm.ui;
  */
 public class VMView extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ExeFrame.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(RegFrame.class.getName());
 
     /**
-     * Creates new form ExeFrame
+     * Creates new form RegFrame
      */
     public VMView() {
         initComponents();
@@ -220,7 +220,7 @@ public class VMView extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ExeFrame().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new RegFrame().setVisible(true));
     }
 
     // Variables declaration - do not modify                     
