@@ -9,10 +9,10 @@ com/mycompany/simple/vm/VMEvent$State.class
 com/mycompany/simple/vm/devices/DeviceController.class
 com/mycompany/simple/vm/VMListener.class
 com/mycompany/simple/vm/controller/VMController$1.class
-com/mycompany/simple/vm/test.class
 com/mycompany/simple/vm/VirtualMachine.class
 com/mycompany/simple/vm/ui/VMView.class
 com/mycompany/simple/vm/model/ProgramImage.class
+com/mycompany/simple/vm/SimpleVm.class
 com/mycompany/simple/vm/VMEvent.class
 com/mycompany/simple/vm/VMEvent$Type.class
 com/mycompany/simple/vm/CPU$1.class

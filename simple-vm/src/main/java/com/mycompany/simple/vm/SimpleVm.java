@@ -9,7 +9,7 @@ import com.mycompany.simple.vm.ui.VMFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-public class test{
+public class SimpleVm{
 
      public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

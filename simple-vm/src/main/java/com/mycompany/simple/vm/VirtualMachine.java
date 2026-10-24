@@ -195,67 +195,65 @@ public void reset() {
     }
 
     private void executeStep(boolean running) {
-    if (state == VMEvent.State.ERROR
-            || state == VMEvent.State.HALTED
-            || cpu.isHalted()) {
-        return;
-    }
-
-    try {
-        cpu.step(memory, this);
-
-        if (cpu.isHalted()) {
-            state = VMEvent.State.HALTED;
-
-            publish(
-                    VMEvent.Type.HALTED,
-                    "La ejecución terminó correctamente.",
-                    null
-            );
+        if (state == VMEvent.State.ERROR
+                || state == VMEvent.State.HALTED
+                || cpu.isHalted()) {
             return;
         }
-
-        state = running
-                ? VMEvent.State.RUNNING
-                : VMEvent.State.PAUSED;
-
-        Instruction executed =
-        Instruction.decodeInstruction(cpu.getIR());
-
-VMEvent.Type eventType;
-
-if (executed == Instruction.STORE) {
-    eventType = VMEvent.Type.MEMORY_MODIFIED;
-} else if (executed == Instruction.OUTPUT) {
-    eventType = VMEvent.Type.OUTPUT;
-} else {
-    eventType = VMEvent.Type.INSTRUCTION_EXECUTED;
-}
-
-        publish(
-                eventType,
-                "Ejecutada: " + executed.getMnemonic(),
-                null
-        );
-    } catch (InputRequiredException ex) {
-        state = VMEvent.State.WAITING_FOR_INPUT;
-        publish(
-                VMEvent.Type.INPUT_REQUIRED,
-                "Se requiere un valor entero para continuar.",
-                null
-        );
-    } catch (RuntimeException ex) {
-        lastError = ex;
-        state = VMEvent.State.ERROR;
-        publish(
-                VMEvent.Type.ERROR,
-                ex.getMessage(),
-                ex
-        );
+        
+        try {
+            cpu.step(memory, this);
+            
+            if (cpu.isHalted()) {
+                state = VMEvent.State.HALTED;
+                
+                publish(
+                        VMEvent.Type.HALTED,
+                        "La ejecución terminó correctamente.",
+                        null
+                );
+                return;
+            }
+            
+            state = running
+                    ? VMEvent.State.RUNNING
+                    : VMEvent.State.PAUSED;
+            
+            Instruction executed = Instruction.decodeInstruction(cpu.getIR());
+            
+            VMEvent.Type eventType;
+            
+            if (executed == Instruction.STORE) {
+                eventType = VMEvent.Type.MEMORY_MODIFIED;
+            } else if (executed == Instruction.OUTPUT
+                    || executed == Instruction.PRINT) {
+                eventType = VMEvent.Type.OUTPUT;
+            } else {
+                eventType = VMEvent.Type.INSTRUCTION_EXECUTED;
+            }
+            
+            publish(
+                    eventType,
+                    "Ejecutada: " + executed.getMnemonic(),
+                    null
+            );
+        } catch (InputRequiredException ex) {
+            state = VMEvent.State.WAITING_FOR_INPUT;
+            publish(
+                    VMEvent.Type.INPUT_REQUIRED,
+                    "Se requiere un valor entero para continuar.",
+                  null
+            );
+        } catch (RuntimeException ex) {
+            lastError = ex;
+            state = VMEvent.State.ERROR;
+            publish(
+                    VMEvent.Type.ERROR,
+                    ex.getMessage(),
+                    ex
+            );
+        }
     }
-
-    
-}
 
     /**
      * Ejecución síncrona.

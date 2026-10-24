@@ -1,4 +1,3 @@
-
 package com.mycompany.simple.vm.service;
 
 import com.mycompany.simple.vm.Instruction;
@@ -21,6 +20,7 @@ public final class ProgramAssembler {
             Pattern.compile("-?\\d+");
 
     private static final String DATA_DIRECTIVE = "DATA";
+    private static final String TEXT_DIRECTIVE = "TEXT";
 
     private static final class SourceLine {
 
@@ -101,8 +101,40 @@ public final class ProgramAssembler {
             }
 
             String[] parts = line.split("\\s+");
-            String operation =
-                    parts[0].toUpperCase(Locale.ROOT);
+            String operation = parts[0].toUpperCase(Locale.ROOT);
+            
+            if (operation.equals(TEXT_DIRECTIVE)) {
+                dataSectionStarted = true;
+                
+            if (label == null) {
+                throw error(lineNumber,
+                        "TEXT requiere una etiqueta, por ejemplo: mensaje: TEXT \"Hola\".");
+            }
+            
+            String literal = line.substring(parts[0].length()).trim();
+            String text = parseTextLiteral(literal, lineNumber);
+
+    int address = instructionCount + dataCount;
+    int requiredSpace = text.length() + 1;
+
+    if (address + requiredSpace > Memory.SIZE) {
+        throw error(lineNumber,
+                "El texto supera la memoria disponible.");
+    }
+
+    symbols.put(label, address);
+
+    data.add(new SourceLine(
+            lineNumber,
+            label,
+            TEXT_DIRECTIVE,
+            text,
+            true
+    ));
+
+    dataCount += requiredSpace;
+    continue;
+}
 
             if (operation.equals(DATA_DIRECTIVE)) {
 
@@ -242,10 +274,21 @@ public final class ProgramAssembler {
         }
 
         for (SourceLine sourceLine : data) {
-
             int address = symbols.get(sourceLine.label);
+            
+            if (sourceLine.operation.equals(TEXT_DIRECTIVE)) {
+                String text = sourceLine.operand;
+                
+                for (int i = 0; i < text.length(); i++) {
+                    image[address + i] = text.charAt(i);
+                }
 
-            image[address] = Integer.parseInt(sourceLine.operand);
+            // Terminador del texto.
+            image[address + text.length()] = 0;
+            
+            } else {
+        image[address] = Integer.parseInt(sourceLine.operand);
+            }
         }
 
         return new ProgramImage(
@@ -281,6 +324,52 @@ public final class ProgramAssembler {
         }
 
         return address;
+    }
+    
+    private String parseTextLiteral(String literal, int lineNumber) {
+        if (literal.length() < 2
+                || literal.charAt(0) != '"'
+                || literal.charAt(literal.length() - 1) != '"') {
+            throw error(lineNumber,
+                    "Texto inválido. Usa comillas dobles: TEXT \"Hola\".");
+        }
+        String content = literal.substring(1, literal.length() - 1);
+        StringBuilder result = new StringBuilder();
+        
+        for (int i = 0; i < content.length(); i++) {
+            char c = content.charAt(i);
+            
+            if (c != '\\') {
+                result.append(c);
+                continue;
+            }
+            
+            if (++i >= content.length()) {
+                throw error(lineNumber,
+                        "Secuencia de escape incompleta en TEXT.");
+            }
+            
+            char escaped = content.charAt(i);
+            
+            switch (escaped) {
+                case 'n':
+                    result.append('\n');
+                    break;
+                case 't':
+                    result.append('\t');
+                    break;
+                case '"':
+                    result.append('"');
+                    break;
+                case '\\':
+                    result.append('\\');
+                    break;
+                default:
+                    throw error(lineNumber,
+                            "Secuencia de escape no válida: \\" + escaped);
+            }
+        }
+        return result.toString();
     }
 
     private IllegalArgumentException error(

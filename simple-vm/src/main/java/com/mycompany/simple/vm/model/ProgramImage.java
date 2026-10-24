@@ -1,4 +1,3 @@
-
 package com.mycompany.simple.vm.model;
 
 public final class ProgramImage {

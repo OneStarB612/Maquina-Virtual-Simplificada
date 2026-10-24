@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class DiskController implements DeviceController {
 
-    public static final int DISK_SIZE = 8192;
-    private static final int FILE_SLOT_SIZE = 512;
+    public static final int DISK_SIZE = 16384;
+    private static final int FILE_SLOT_SIZE = 1024;
     private static final int MAX_FILES = DISK_SIZE / FILE_SLOT_SIZE;
 
     private final int[] diskStorage = new int[DISK_SIZE];

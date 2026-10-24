@@ -46,7 +46,6 @@ public class VMFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(460, 300));
-        setPreferredSize(new java.awt.Dimension(460, 300));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
         jPanel2.setMinimumSize(new java.awt.Dimension(460, 300));
@@ -96,7 +95,7 @@ public class VMFrame extends javax.swing.JFrame {
         loadButton.setText("Emular");
         buttonsPanel.add(loadButton);
 
-        exampleBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cargar", "Guardar", "Sumar", "Restar", "Saltar", "Cero", "Entrada", "Salida", "Terminar", "Memoria", "Teclado", "Impresora" }));
+        exampleBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cargar", "Guardar", "Sumar", "Restar", "Saltar", "Cero", "Entrada", "Salida", "Terminar", "Memoria", "Teclado", "Impresora", "Menu" }));
         exampleBox.setLightWeightPopupEnabled(false);
         exampleBox.setMaximumSize(new java.awt.Dimension(105, 32));
         exampleBox.setMinimumSize(new java.awt.Dimension(105, 32));

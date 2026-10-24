@@ -235,6 +235,69 @@ public class VMController {
                     OUTPUT
                     HALT
                     """);
+            
+            programFileService.saveExample("Menu",
+                    """
+                    ; Menu de operaciones
+                    inicio: PRINT menu
+                    INPUT
+                    STORE opcion
+                    
+                    ; Opcion 1: sumar
+                    LOAD opcion
+                    SUB uno
+                    JZ sumar
+                    
+                    ; Opcion 2: restar
+                    LOAD opcion
+                    SUB dos
+                    JZ restar
+                    
+                    ; Opcion 3: salir
+                    LOAD opcion
+                    SUB tres
+                    JZ salir
+                    
+                    ; Opcion invalida
+                    PRINT invalida
+                    JMP inicio
+                    
+                    sumar: PRINT mensaje1
+                    INPUT
+                    STORE numero1
+                    INPUT
+                    ADD numero1
+                    OUTPUT
+                    JMP inicio
+                    
+                    restar: PRINT mensaje2
+                    INPUT
+                    STORE numero1
+                    INPUT
+                    STORE numero2
+                    LOAD numero1
+                    SUB numero2
+                    OUTPUT
+                    JMP inicio
+                    
+                    salir: PRINT despedida
+                    HALT
+                    
+                    ; Textos
+                    menu: TEXT "\\n=== MENU ===\\n1. Sumar dos numeros\\n2. Restar dos numeros\\n3. Salir\\nElige una opcion:"
+                    mensaje1: TEXT  "\\nIntroduce el primer numero y luego el segundo:"
+                    mensaje2: TEXT  "\\nIntroduce el primer numero y luego el segundo:"
+                    invalida: TEXT  "\\nOpcion invalida. Intenta de nuevo."
+                    despedida: TEXT  "\\nPrograma finalizado."
+                    
+                    ; Datos
+                    opcion: DATA 0
+                    uno: DATA 1
+                    dos: DATA 2
+                    tres: DATA 3
+                    numero1: DATA 0
+                    numero2: DATA 0
+                    """);
         } finally {
             initializingExamples = false;
         }
@@ -495,24 +558,44 @@ public class VMController {
         });
     }
 
-    private void updateIO(VMEvent event) {
-        if (event.getType() != VMEvent.Type.OUTPUT) {
+   private void updateIO(VMEvent event) {
+       if (event.getType() != VMEvent.Type.OUTPUT) {
+           return;
+       }
+       
+       String message = event.getMessage();
+
+        // Salida de texto mediante PRINT.
+        if (message != null && message.contains("PRINT")) {
+            java.util.List<String> history =
+                    service.getVirtualMachine()
+                           .getPrinter()
+                           .getTextHistory();
+
+            if (history.isEmpty()) {
+                console.appendLine(
+                        "La impresora no tiene textos registrados.");
+                return;
+            }
+            
+            console.appendLine(
+                    history.get(history.size() - 1));
             return;
         }
 
+        // Salida numérica mediante OUTPUT.
         java.util.List<Integer> history = service.getOutputHistory();
-
-        console.appendLine("Impresora simulada utilizada.");
-
+        
         if (history.isEmpty()) {
-            console.appendLine("La impresora no tiene valores registrados.");
+            console.appendLine(
+                    "La impresora no tiene valores numéricos registrados.");
             return;
         }
-
-        int lastValue = history.get(history.size() - 1);
-
-        console.appendLine("Último valor en outputHistory: " + lastValue);
-    }
+        
+        console.appendLine(
+                "Último valor en outputHistory: "
+                        + history.get(history.size() - 1));
+   }
 
     private void updateRegisters(VMEvent event) {
         rview.irValue.setText(String.valueOf(event.getIR()));
@@ -560,6 +643,20 @@ public class VMController {
 
     private void appendLog(String message) {
         console.appendLine(message);
+    }
+    
+    private void updateTextOutput() {
+        java.util.List<String> history =
+                service.getVirtualMachine()
+                       .getPrinter()
+                       .getTextHistory();
+
+        if (history.isEmpty()) {
+            return;
+        }
+
+        console.appendLine(
+                history.get(history.size() - 1));
     }
     
 }

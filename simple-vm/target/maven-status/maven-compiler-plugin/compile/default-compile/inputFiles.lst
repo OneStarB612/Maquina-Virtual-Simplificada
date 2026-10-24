@@ -1,6 +1,7 @@
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/CPU.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/Instruction.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/Memory.java
+/home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/SimpleVm.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/VMEvent.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/VMExecutionException.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/VMListener.java
@@ -17,7 +18,6 @@
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/service/ProgramAssembler.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/service/ProgramFileService.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/service/VMService.java
-/home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/test.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/ui/ConsoleFrame.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/ui/ESFrame.java
 /home/steven/NetBeansProjects/Maquina-Virtual-Simplificada/simple-vm/src/main/java/com/mycompany/simple/vm/ui/RegFrame.java

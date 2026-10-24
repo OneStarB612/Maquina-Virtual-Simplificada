@@ -14,7 +14,8 @@ public enum Instruction {
     JZ(6, "JZ", true),
     INPUT(7, "INPUT", false),
     OUTPUT(8, "OUTPUT", false),
-    HALT(9, "HALT", false);
+    HALT(9, "HALT", false),
+    PRINT(10, "PRINT", true);
 
     private final int opcode;
     private final String mnemonic;

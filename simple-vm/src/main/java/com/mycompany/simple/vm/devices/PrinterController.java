@@ -19,10 +19,21 @@ public class PrinterController implements DeviceController {
     public synchronized List<Integer> getOutputHistory() {
         return new ArrayList<>(outputHistory);
     }
+    
+    private final List<String> textHistory = new ArrayList<>();
+
+    public synchronized void writeText(String text) {
+        textHistory.add(text);
+    }
+
+    public synchronized List<String> getTextHistory() {
+        return new ArrayList<>(textHistory);
+    }
 
     @Override
     public synchronized void reset() {
         outputHistory.clear();
+        textHistory.clear();
     }
 
     public void clear() {

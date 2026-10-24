@@ -1,4 +1,3 @@
-
 package com.mycompany.simple.vm.service;
 
 import com.mycompany.simple.vm.model.CompilationResult;

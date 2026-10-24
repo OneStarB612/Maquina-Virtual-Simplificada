@@ -1,4 +1,3 @@
-
 package com.mycompany.simple.vm;
 
 public class VMExecutionException extends RuntimeException {

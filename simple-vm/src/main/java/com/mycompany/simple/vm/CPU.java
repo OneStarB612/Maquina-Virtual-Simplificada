@@ -1,4 +1,3 @@
-
 package com.mycompany.simple.vm;
 
 import com.mycompany.simple.vm.devices.InputRequiredException;
@@ -122,6 +121,27 @@ public class CPU {
 
                 case HALT:
                     halted = true;
+                    break;
+                    
+                case PRINT:
+                    StringBuilder text = new StringBuilder();
+                    int address = operand;
+                    while (address < memory.getSize()) {
+                        int character = memory.read(address++);
+                        if (character == 0) {
+                            break;
+                        }
+                        
+                        text.append((char) character);
+                    }
+                    
+                    if (address > memory.getSize()
+                            || (address == memory.getSize() && text.length() > 0)) {
+                        throw new IllegalArgumentException(
+                                "Texto sin terminador en memoria.");
+                    }
+                    
+                    vm.getPrinter().writeText(text.toString());
                     break;
 
                 default:

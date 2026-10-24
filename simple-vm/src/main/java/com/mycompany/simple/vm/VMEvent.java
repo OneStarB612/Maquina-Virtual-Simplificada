@@ -1,4 +1,3 @@
-
 package com.mycompany.simple.vm;
 
 public final class VMEvent {
