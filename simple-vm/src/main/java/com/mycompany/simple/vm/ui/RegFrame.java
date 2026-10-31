@@ -61,39 +61,40 @@ public class RegFrame extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(102, 102, 102));
 
-        jPanel4.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setForeground(new java.awt.Color(0, 0, 0));
 
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Status");
 
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("PC");
 
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("IR");
 
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("ACC");
 
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
         jLabel9.setText("zeroFlag");
 
-        statusLabel.setForeground(new java.awt.Color(255, 255, 255));
+        statusLabel.setForeground(new java.awt.Color(0, 0, 0));
         statusLabel.setText("READY");
 
-        irValue.setForeground(new java.awt.Color(255, 255, 255));
+        irValue.setForeground(new java.awt.Color(0, 0, 0));
         irValue.setText("0");
 
-        accValue.setForeground(new java.awt.Color(255, 255, 255));
+        accValue.setForeground(new java.awt.Color(0, 0, 0));
         accValue.setText("0");
 
-        zeroFlagValue.setForeground(new java.awt.Color(255, 255, 255));
+        zeroFlagValue.setForeground(new java.awt.Color(0, 0, 0));
         zeroFlagValue.setText("true");
 
-        pcValue.setForeground(new java.awt.Color(255, 255, 255));
+        pcValue.setForeground(new java.awt.Color(0, 0, 0));
         pcValue.setText("0");
 
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("Registros");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -167,7 +168,7 @@ public class RegFrame extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(51, 51, 51));
 
         areaTable.setEditable(false);
-        areaTable.setBackground(new java.awt.Color(204, 204, 204));
+        areaTable.setBackground(new java.awt.Color(255, 255, 255));
         areaTable.setColumns(20);
         areaTable.setForeground(new java.awt.Color(0, 0, 0));
         areaTable.setRows(5);

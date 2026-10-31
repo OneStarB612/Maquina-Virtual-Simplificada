@@ -4,6 +4,7 @@ com/mycompany/simple/vm/service/ProgramAssembler.class
 com/mycompany/simple/vm/VMExecutionException.class
 com/mycompany/simple/vm/ui/ConsoleFrame.class
 com/mycompany/simple/vm/devices/InputRequiredException.class
+com/mycompany/simple/vm/ui/VMFrame$1.class
 com/mycompany/simple/vm/ui/ESFrame.class
 com/mycompany/simple/vm/VMEvent$State.class
 com/mycompany/simple/vm/devices/DeviceController.class

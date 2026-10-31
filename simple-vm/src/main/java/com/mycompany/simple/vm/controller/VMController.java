@@ -7,6 +7,9 @@ import com.mycompany.simple.vm.service.ProgramFileService;
 import com.mycompany.simple.vm.ui.ConsoleFrame;
 import com.mycompany.simple.vm.ui.RegFrame;
 import com.mycompany.simple.vm.ui.VMFrame;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.JOptionPane;
@@ -15,6 +18,7 @@ import javax.swing.JOptionPane;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.SwingUtilities;
+import javax.swing.text.BadLocationException;
 
 public class VMController {
 
@@ -49,7 +53,11 @@ public class VMController {
         
         this.programFileService = new ProgramFileService(
         service.getVirtualMachine().getDisk());
-
+        
+        vm.setTitle("Máquina virtual Simulada (VMFrame)");
+        rview.setTitle("(RegFrame)");
+        console.setTitle("consola (console)");
+        
         initializeExamples();
     }
     
@@ -92,8 +100,23 @@ public class VMController {
                 rview.dispose();
             }
         });
+        
+        vm.programArea.addCaretListener(e -> {
+            int offset = vm.programArea.getCaretPosition();
+            
+            try {
+                int row = vm.programArea.getLineOfOffset(offset) + 1;
+                int lineStart = vm.programArea.getLineStartOffset(row - 1);
+                int col = offset - lineStart + 1;
+                
+                vm.editorLabel.setText("row: " + row + " " + "col: " + col);
+            } catch (BadLocationException ex) {
+        // Ignorar posiciones no válidas
+            }
+        }); 
     }
-
+    
+  
     private void initializeExamples() {
         initializingExamples = true;
 

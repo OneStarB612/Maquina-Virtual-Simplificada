@@ -54,9 +54,9 @@ public class ConsoleFrame extends javax.swing.JFrame {
         jScrollPane1.setBackground(new java.awt.Color(0, 0, 0));
 
         historyArea.setEditable(false);
-        historyArea.setBackground(new java.awt.Color(0, 0, 0));
+        historyArea.setBackground(new java.awt.Color(255, 255, 255));
         historyArea.setColumns(20);
-        historyArea.setForeground(new java.awt.Color(255, 255, 255));
+        historyArea.setForeground(new java.awt.Color(0, 0, 0));
         historyArea.setRows(5);
         jScrollPane1.setViewportView(historyArea);
 
@@ -79,6 +79,8 @@ public class ConsoleFrame extends javax.swing.JFrame {
 
         inputField.setBackground(new java.awt.Color(255, 255, 255));
         inputField.setForeground(new java.awt.Color(0, 0, 0));
+        inputField.setCaretColor(new java.awt.Color(255, 255, 255));
+        inputField.setDisabledTextColor(new java.awt.Color(255, 255, 255));
         inputField.setPreferredSize(new java.awt.Dimension(450, 30));
         jPanel3.add(inputField, java.awt.BorderLayout.CENTER);
 
@@ -89,6 +91,7 @@ public class ConsoleFrame extends javax.swing.JFrame {
         jPanel4.setLayout(new java.awt.BorderLayout());
 
         sendButton.setBackground(new java.awt.Color(13, 103, 51));
+        sendButton.setForeground(new java.awt.Color(255, 255, 255));
         sendButton.setText("Enviar");
         sendButton.setPreferredSize(new java.awt.Dimension(70, 30));
         jPanel4.add(sendButton, java.awt.BorderLayout.CENTER);

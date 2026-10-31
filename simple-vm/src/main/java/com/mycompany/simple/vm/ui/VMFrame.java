@@ -33,6 +33,7 @@ public class VMFrame extends javax.swing.JFrame {
 
         openChoose = new javax.swing.JFileChooser();
         jPanel2 = new javax.swing.JPanel();
+        editorLabel = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         programArea = new javax.swing.JTextArea();
@@ -50,15 +51,23 @@ public class VMFrame extends javax.swing.JFrame {
 
         jPanel2.setMinimumSize(new java.awt.Dimension(460, 300));
 
+        editorLabel.setText("row:1 col: 1");
+        editorLabel.setToolTipText("Posición en el editor de texto");
+
         jPanel3.setForeground(new java.awt.Color(255, 255, 255));
         jPanel3.setMinimumSize(new java.awt.Dimension(460, 244));
 
-        programArea.setBackground(new java.awt.Color(51, 51, 51));
+        programArea.setBackground(new java.awt.Color(255, 255, 255));
         programArea.setColumns(20);
-        programArea.setForeground(new java.awt.Color(255, 255, 255));
+        programArea.setForeground(new java.awt.Color(0, 0, 0));
         programArea.setRows(5);
         programArea.setToolTipText("Editor de código");
-        programArea.setCaretColor(new java.awt.Color(255, 255, 255));
+        programArea.setCaretColor(new java.awt.Color(0, 0, 0));
+        programArea.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                programAreaMouseMoved(evt);
+            }
+        });
         jScrollPane1.setViewportView(programArea);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -128,19 +137,30 @@ public class VMFrame extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(editorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(editorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         getContentPane().add(jPanel2);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void programAreaMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_programAreaMouseMoved
+        // TODO add your handling code here:
+    }//GEN-LAST:event_programAreaMouseMoved
 
     /**
      * @param args the command line arguments
@@ -170,6 +190,7 @@ public class VMFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonsPanel;
     public javax.swing.JButton clearButton;
+    public javax.swing.JLabel editorLabel;
     public javax.swing.JComboBox<String> exampleBox;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
